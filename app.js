@@ -24,7 +24,6 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  console.log(req.cookies);
   res.send("e-commerce api");
 });
 
