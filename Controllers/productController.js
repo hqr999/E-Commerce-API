@@ -1,11 +1,11 @@
 const Product = require(`../models/Product`);
 const { StatusCodes } = require(`http-status-codes`);
 const CustomError = require(`../errors`);
-
+const path = require("path");
 const criaProduto = async (req, res) => {
   req.body.user = req.user.userId;
   const product = await Product.create(req.body);
-  res.status(StatusCodes.CREATED).json();
+  res.status(StatusCodes.CREATED).json({ product });
 };
 const pegaTodosProduto = async (req, res) => {
   const products = await Product.find({});
@@ -50,8 +50,32 @@ const deletaProduto = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: `Sucesso! Produto Removido` });
 };
 
-const updateProduto = async (req, res) => {
-  res.send(`Upload produto`);
+const uploadImagem = async (req, res) => {
+  if (!req.files) {
+    throw new CustomError.BadRequestError("Nenhum upload de arquivo");
+  }
+
+  const imgProd = req.files.image;
+
+  if (!imgProd.mimetype.startsWith("image")) {
+    throw new CustomError.BadRequestError(
+      "Por favor faça upload de uma imagem",
+    );
+  }
+
+  const maxSize = 1024 * 1024;
+
+  if (imgProd.size > maxSize) {
+    throw new CustomError.BadRequestError(
+      "Por favor faça upload de uma imagem menor que 1MB",
+    );
+  }
+  const imgPath = path.join(
+    __dirname,
+    "../public/uploads." + `${imgProd.name}`,
+  );
+  await imgProd.mv(imgPath);
+  res.status(StatusCodes.OK).json({ image: `/uploads/${imgProd.name}` });
 };
 
 module.exports = {
@@ -60,6 +84,6 @@ module.exports = {
   pegaUnicoProduto,
   atualizaProduto,
   deletaProduto,
-  updateProduto,
+  uploadImagem,
   pegaTodosProduto,
 };

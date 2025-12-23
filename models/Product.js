@@ -26,7 +26,7 @@ const ProductSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, `Por favor coloque o produto em uma categoria`],
-      enum: [`escritório`, `cozinha`, `quarto`],
+      enum: [`office`, `bedroom`, `kitchen`],
     },
     company: {
       type: String,

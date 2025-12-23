@@ -9,7 +9,7 @@ const {
   pegaTodosProduto,
   deletaProduto,
   atualizaProduto,
-  updateProduto,
+  uploadImagem,
 } = require("../Controllers/productController");
 
 router
@@ -19,12 +19,12 @@ router
 
 router
   .route(`/uploadImage`)
-  .post([authenticateUser, authorizePermissions(`admin`)], atualizaProduto);
+  .post([authenticateUser, authorizePermissions(`admin`)], uploadImagem);
 
 router
   .route(`/:id`)
   .get(pegaUnicoProduto)
-  .patch([authenticateUser, authorizePermissions(`admin`)], updateProduto)
+  .patch([authenticateUser, authorizePermissions(`admin`)], atualizaProduto)
   .delete([authenticateUser, authorizePermissions(`admin`)], deletaProduto);
 
 module.exports = router;
