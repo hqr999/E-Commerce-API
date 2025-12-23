@@ -15,14 +15,14 @@ const errorHandler = require("./middleware/error-handler");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const prodRouter = require(`./routes/productRoutes`);
+const reviewRouter = require(`./routes/reviewRoutes`);
 
 app.use(morgan("tiny"));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
-
-app.use(express.static('./public'))
-app.use(fileUpload())
+app.use(express.static("./public"));
+app.use(fileUpload());
 
 app.get("/api/v1", (req, res) => {
   console.log(req.signedCookies);
@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use(`/api/v1/products`, prodRouter);
+app.use(`/api/v1/reviews`, reviewRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandler);

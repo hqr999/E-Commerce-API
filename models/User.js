@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: [true, "Por favor dê um e-mail"],
     validate: {
       validator: validator.isEmail,
@@ -25,7 +26,7 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, enum: ["admin", "user"], default: "user" },
 });
 
-UserSchema.pre("save", async function () {
+UserSchema.pre("save", async function() {
   //console.log(this.modifiedPaths());
   //console.log(this.isModified("name"));
 
@@ -34,7 +35,7 @@ UserSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-UserSchema.methods.comparePassword = async function (candidatePassword) {
+UserSchema.methods.comparePassword = async function(candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
 };
